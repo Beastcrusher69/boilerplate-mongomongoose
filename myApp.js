@@ -1,9 +1,10 @@
 require('dotenv').config();
 
 const mongoose = require('mongoose');
-mongoose.connect(process.env.MONGO_URI);
+mongoose.connect(process.env.MONGO_URI,() => {
+  console.log("connected !!")
+});
 
-let Person;
 
 const createAndSavePerson = (done) => {
   done(null /*, data*/);
@@ -70,5 +71,15 @@ exports.createManyPeople = createManyPeople;
 exports.removeById = removeById;
 exports.removeManyPeople = removeManyPeople;
 exports.queryChain = queryChain;
+
+let Schema = mongoose.Schema ;
+
+let peopleSchema = new Schema({
+  name:{ type:String, required: true},
+  age: Number,
+  favoriteFoods: [String]  
+});
+
+const Person = mongoose.model('Person', peopleSchema)
 
 
