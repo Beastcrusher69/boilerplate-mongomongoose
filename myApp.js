@@ -1,5 +1,7 @@
 require('dotenv').config();
 
+const mongoose = require('mongoose');
+mongoose.connect(process.env.MONGO_URI);
 
 let Person;
 
@@ -68,3 +70,5 @@ exports.createManyPeople = createManyPeople;
 exports.removeById = removeById;
 exports.removeManyPeople = removeManyPeople;
 exports.queryChain = queryChain;
+
+
