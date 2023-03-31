@@ -1,17 +1,63 @@
 require('dotenv').config();
 
-const mongoose = require('mongoose');
-mongoose.connect(process.env.MONGO_URI,() => {
-  console.log("connected !!")
+let mongoose = require('mongoose');
+
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+
+let Person;
+
+const Schema = mongoose.Schema;
+
+const personSchema = new Schema({
+  name : {type : String , required : true },
+  age : Number,
+  favoriteFoods : [String]
 });
 
+Person = mongoose.model('Person', personSchema);
 
 const createAndSavePerson = (done) => {
-  done(null /*, data*/);
+  let jay = new Person({
+    name:'jay',
+    age:18,
+    favoriteFoods: ['munchurian','noodles','chocolate-brownie'] 
+  })
+
+  jay.save((error, data)=>{
+    if(error){
+      console.error(error);
+    }
+    else{
+      done(null,data);
+    }
+  })
 };
 
-const createManyPeople = (arrayOfPeople, done) => {
-  done(null /*, data*/);
+let arrayOfPeople = [{
+  name:'jarvis',
+  age:1,
+  favoriteFoods:['lithium','oil']
+},
+{
+  name:'carry',
+  age:1,
+  favoriteFoods:['ramen','maggi']
+},
+{
+  name:'rocky',
+  age:1,
+  favoriteFoods:['rocks','pebbles']
+}]
+
+const createManyPeople =function (arrayOfPeople, done){
+  Person.create(arrayOfPeople, (err, data)=>{
+    if(err){
+      console.log(err);
+    } 
+    else {
+      done(null, data);
+  }
+  });
 };
 
 const findPeopleByName = (personName, done) => {
@@ -54,6 +100,8 @@ const queryChain = (done) => {
   done(null /*, data*/);
 };
 
+
+
 /** **Well Done !!**
 /* You completed these challenges, let's go celebrate !
  */
@@ -71,15 +119,3 @@ exports.createManyPeople = createManyPeople;
 exports.removeById = removeById;
 exports.removeManyPeople = removeManyPeople;
 exports.queryChain = queryChain;
-
-let Schema = mongoose.Schema ;
-
-let peopleSchema = new Schema({
-  name:{ type:String, required: true},
-  age: Number,
-  favoriteFoods: [String]  
-});
-
-const Person = mongoose.model('Person', peopleSchema)
-
-
